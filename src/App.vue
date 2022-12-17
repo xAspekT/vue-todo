@@ -6,7 +6,8 @@ export default {
       todos: [
         {
           done: false,
-          text:"Do something"
+          text:"Do something",
+          edit: false
         }
       ]
     }
@@ -19,23 +20,35 @@ export default {
 
         const todo = {
         done: false,
-        text: this.newTask
+        text: this.newTask,
+        edit: false
       }
       this.todos.push(todo)
       this.newTask = ""
+    },
+    deleteTodo(index){
+      this.todos.splice(index, 1)
     }
   }
 }
 </script>
 
 <template>
+
 <h1>My ToDo's</h1>
+
 <br>
-<div v-for="todo in todos" :key="todo.text">
+
+<div v-for="(todo, index) in todos" :key="todo.text">
+
   <input type="checkbox" v-model="todo.done">
-  <span>{{todo.text}}</span>
-  <button>Edit</button>
-  <button>Delete</button>
+
+  <span v-if="!todo.edit">{{todo.text}}</span>
+  <input type="text" :value="todo.text" @blur="todo.text = $event.target.value; todo.edit = false" v-if="todo.edit">
+
+  <button @click="todo.edit = !todo.edit">Edit</button>
+  <button @click="deleteTodo(index)">Delete</button>
+
 </div>
 
 <label for="add-todo">Add a Todo</label>
